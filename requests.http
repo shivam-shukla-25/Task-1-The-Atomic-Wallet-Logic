@@ -1,0 +1,51 @@
+### Variables
+@baseUrl = http://localhost:4000
+@userId  = PASTE_USER_ID_FROM_SEED_OUTPUT
+
+### Health check
+GET {{baseUrl}}/health
+
+### Place a valid bet ($100)
+POST {{baseUrl}}/place-bet
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "amount": 100
+}
+
+### Place the same bet again — should fail with "Insufficient balance"
+POST {{baseUrl}}/place-bet
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "amount": 100
+}
+
+### Invalid userId — should return 400
+POST {{baseUrl}}/place-bet
+Content-Type: application/json
+
+{
+  "userId": "not-a-real-id",
+  "amount": 10
+}
+
+### Zero / negative amount — should return 400
+POST {{baseUrl}}/place-bet
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "amount": 0
+}
+
+### Unknown user — should return 404
+POST {{baseUrl}}/place-bet
+Content-Type: application/json
+
+{
+  "userId": "64b0000000000000000000aa",
+  "amount": 10
+}
